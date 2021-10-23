@@ -12,16 +12,23 @@ class Item(BaseModel):
     is_offer: Optional[bool] = None
 
 
+books = [
+    {'title': 'Lo que el viento se llevo', 'author_id': 2, 'genre_id': 2},
+    {'title': 'La Iliada', 'author_id': 1, 'genre_id': 1},
+    {'title': 'La Odisea', 'author_id': 1, 'genre_id': 1},
+]
+
+
 @app.get('/')
-def read_root():
-    return {'Hello': 'World'}
+async def read_root():
+    return {'Hello': 'Fack\'in Levi'}
 
 
-@app.get('/items/{item_id}')
-def read_item(item_id: int, q: Optional[str] = None):
-    return {'item_id': item_id, 'q': q}
+@app.get('/books/')
+async def read_book(skip: int = 0, limit: int = 10):
+    return books[skip: skip + limit]
 
 
-@app.put('/items/{item_id}')
-def update_item(item_id: int, item: Item):
-    return {'itme_name': item.name, 'item_id': item_id}
+@app.get('/books/{resource_id}')
+async def read_book_by_id(resource_id: int):
+    return books[resource_id - 1]
