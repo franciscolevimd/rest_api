@@ -1,22 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import Optional
 
 
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Optional[bool] = None
+class Book(BaseModel):
+    title: str
+    author_id: int
+    genre_id: int
 
 
-books = [
-    {'title': 'Lo que el viento se llevo', 'author_id': 2, 'genre_id': 2},
-    {'title': 'La Iliada', 'author_id': 1, 'genre_id': 1},
-    {'title': 'La Odisea', 'author_id': 1, 'genre_id': 1},
-]
+books = []
 
 
 @app.get('/')
@@ -32,3 +27,9 @@ async def read_book(skip: int = 0, limit: int = 10):
 @app.get('/books/{resource_id}')
 async def read_book_by_id(resource_id: int):
     return books[resource_id - 1]
+
+
+@app.post('/books/')
+async def cretae_book(new_book: Book):
+    books.append(new_book)
+    return new_book
