@@ -40,3 +40,9 @@ async def update_book(resource_id: int, modified_book: Book):
     book = books[resource_id - 1]
     books[resource_id - 1] = modified_book
     return book
+
+
+@app.delete('/books/{resource_id}')
+async def delete_book(resource_id: int):
+    book = books.pop(resource_id - 1)
+    return book
