@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Optional
@@ -85,3 +86,7 @@ def find_book_by_id(book_id: int):
     if real_id < 0 or real_id >= len(books):
         return None
     return books[real_id]
+
+
+if __name__ == '__main__':
+    uvicorn.run('main:app', host='127.0.0.1', port=8000)
