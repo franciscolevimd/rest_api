@@ -130,3 +130,10 @@ dmypy.json
 
 # Mac files
 .DS_store
+
+# Visual studio
+.vs/
+*.sln
+*.pyproj
+UpgradeLog.htm
+Backup/
