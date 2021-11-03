@@ -1,10 +1,20 @@
 import uvicorn
+import secrets
+
 from fastapi import FastAPI
+from fastapi import Depends
+from fastapi import HTTPException
+from fastapi import status
+
+from fastapi.security import HTTPBasic
+from fastapi.security import HTTPBasicCredentials
+
 from pydantic import BaseModel
 from typing import Optional
 
 
 app = FastAPI()
+security = HTTPBasic()
 
 
 class Book(BaseModel):
@@ -15,6 +25,24 @@ class Book(BaseModel):
 
 
 books = []
+
+
+def get_current_username(
+        credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, 'levbono')
+    correct_password = secrets.compare_digest(
+        credentials.password, 'arisauriorex')
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Incorrect username or password',
+            headers={'WWW-Authenticate': 'Basic'})
+    return credentials.username
+
+
+@app.get('/users/me')
+def read_current_user(username: str = Depends(get_current_username)):
+    return {'username': username}
 
 
 @app.get('/')
