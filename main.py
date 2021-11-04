@@ -4,6 +4,7 @@ import secrets
 from fastapi import FastAPI
 from fastapi import Depends
 from fastapi import HTTPException
+from fastapi import Header
 from fastapi import status
 
 from fastapi.security import HTTPBasic
@@ -41,8 +42,16 @@ def get_current_username(
 
 
 @app.get('/users/me')
-def read_current_user(username: str = Depends(get_current_username)):
+async def read_current_user(username: str = Depends(get_current_username)):
     return {'username': username}
+
+
+@app.get('/users/login')
+async def login(
+        x_hash: Optional[str] = Header(None),
+        x_uid: Optional[str] = Header(None),
+        x_timestamp: Optional[str] = Header(None)):
+    return {"X-Token": x_hash, "X-Uid": x_uid, "X-Timestamp": x_timestamp}
 
 
 @app.get('/')
